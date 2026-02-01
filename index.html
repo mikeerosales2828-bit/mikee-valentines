@@ -13,7 +13,12 @@
     #yes{background:#ff2d55;color:white}
     #no{background:#e9e9ef;margin-left:10px}
     .small{opacity:.7;font-size:14px;margin-top:14px}
-  </style>
+  </style> .dateBtn{
+  background:#fff0f5;
+  border:1px solid rgba(0,0,0,.08);
+  color:#111;
+}
+.dateBtn:hover{ transform: scale(1.04); }
 </head>
 <body>
   <div class="card">
@@ -30,8 +35,24 @@
     </div>
     <div class="small" id="msg"></div>
   </div>
+  <!-- Date picker (hidden until YES) -->
+<div id="datePicker" style="display:none; margin-top:16px;">
+  <div style="font-weight:700; text-align:center; margin:8px 0 12px;">
+    Choose our Valentine plan 👀
+  </div>
 
+  <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+    <button type="button" class="dateBtn" data-choice="🍝 Dinner">🍝 Dinner</button>
+    <button type="button" class="dateBtn" data-choice="🎬 Movie night">🎬 Movie night</button>
+    <button type="button" class="dateBtn" data-choice="🧺 Picnic">🧺 Picnic</button>
+    <button type="button" class="dateBtn" data-choice="🎁 Surprise">🎁 Surprise</button>
+  </div>
+
+  <div id="dateResult" style="margin-top:12px; text-align:center; font-size:16px; opacity:.9;"></div>
+</div>
   <script>
+    const datePicker = document.getElementById("datePicker");
+const dateResult = document.getElementById("dateResult");
     const msg = document.getElementById("msg");
     const no = document.getElementById("no");
     const yes = document.getElementById("yes");
@@ -52,7 +73,30 @@
       const y = Math.random()*120 - 60;
       no.style.transform = `translate(${x}px,${y}px)`;
     }
+function setupDatePicker(){
+  const buttons = document.querySelectorAll(".dateBtn");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const choice = btn.dataset.choice;
 
+      // cute confirmations per choice
+      const confirmations = {
+        "🍝 Dinner": "🍝 Dinner it is. Dress cute. I’m handling it 😌💐",
+        "🎬 Movie night": "🎬 Movie night locked in. Blankets + snacks = mandatory 🥹",
+        "🧺 Picnic": "🧺 Picnic date!!! I’ll pack the good stuff + a surprise 🫶",
+        "🎁 Surprise": "🎁 Surprise chosen… ok you’re brave 😈💘"
+      };
+
+      dateResult.textContent = confirmations[choice] || `Perfect. ${choice} it is 💘`;
+
+      // (optional) disable buttons after pick
+      buttons.forEach(b => b.disabled = true);
+      buttons.forEach(b => b.style.opacity = 0.75);
+      btn.style.opacity = 1;
+      btn.style.transform = "scale(1.06)";
+    });
+  });
+}
     function confetti(){
       // tiny fake confetti w/ emoji
       for(let k=0;k<30;k++){
