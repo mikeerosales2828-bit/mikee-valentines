@@ -18,7 +18,7 @@ body{
 }
 .card{
   background:#fff;
-  width:min(680px,100%);
+  width:min(700px,100%);
   border-radius:22px;
   box-shadow:0 15px 40px rgba(0,0,0,.15);
   padding:28px 22px;
@@ -58,7 +58,6 @@ button{
   border:1px solid rgba(0,0,0,.08);
 }
 .effect-pop{animation:pop .35s ease}
-.effect-glow{box-shadow:0 0 24px rgba(255,45,85,.35)}
 @keyframes pop{
   0%{transform:scale(1)}
   60%{transform:scale(1.12)}
@@ -150,6 +149,9 @@ src="https://media.giphy.com/media/9d3LQ6TdV2Flo8ODTU/giphy.gif">
   </div>
 </div>
 
+<!-- 🎶 SONG -->
+<audio id="song" src="song.mp3"></audio>
+
 </div>
 
 <script>
@@ -160,11 +162,17 @@ const capy=document.getElementById("capy");
 const datePicker=document.getElementById("datePicker");
 const dateResult=document.getElementById("dateResult");
 const giftsWrap=document.getElementById("giftsWrap");
+const song=document.getElementById("song");
+
+song.volume = 0.5;
 
 const noLines=["Are you sure? 😳","Think again 🥺","Capybara disapproves…","Last chance 💔"];
 let n=0;
 
-no.onclick=()=>{msg.textContent=noLines[n++%noLines.length];yes.style.transform=`scale(${1+n*.1})`};
+no.onclick=()=>{
+  msg.textContent=noLines[n++%noLines.length];
+  yes.style.transform=`scale(${1+n*.1})`;
+};
 
 yes.onclick=()=>{
   msg.textContent="YAYYY 💕";
@@ -176,10 +184,14 @@ yes.onclick=()=>{
 document.querySelectorAll(".dateBtn").forEach(btn=>{
   btn.onclick=()=>{
     dateResult.textContent=`${btn.dataset.choice} it is 💘`;
-    btn.classList.add("effect-pop","effect-glow");
+    btn.classList.add("effect-pop");
+
     giftsWrap.style.display="block";
     initScratch();
     confetti();
+
+    // 🎶 play song after date is picked
+    song.play();
   };
 });
 
@@ -210,8 +222,9 @@ function initScratch(){
     c.onpointerup=()=>down=false;
     c.onpointermove=e=>{
       if(!down) return;
-      const x=e.offsetX,y=e.offsetY;
-      ctx.beginPath();ctx.arc(x,y,18,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();
+      ctx.arc(e.offsetX,e.offsetY,18,0,Math.PI*2);
+      ctx.fill();
     };
   });
 }
