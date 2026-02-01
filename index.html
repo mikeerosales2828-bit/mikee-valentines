@@ -18,7 +18,7 @@ body{
 }
 .card{
   background:#fff;
-  width:min(700px,100%);
+  width:min(720px,100%);
   border-radius:22px;
   box-shadow:0 15px 40px rgba(0,0,0,.15);
   padding:28px 22px;
@@ -50,8 +50,16 @@ button{
 #no{background:#e9e9ef}
 .msg{margin-top:14px;font-size:16px;min-height:22px}
 
+/* photo */
+#photoWrap{display:none;margin-top:16px}
+#photo{
+  max-width:100%;
+  border-radius:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
 /* date picker */
-#datePicker{display:none;margin-top:16px}
+#datePicker{display:none;margin-top:18px}
 .dateBtns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 .dateBtn{
   background:#fff0f5;
@@ -65,7 +73,7 @@ button{
 }
 
 /* scratch cards */
-#giftsWrap{display:none;margin-top:18px}
+#giftsWrap{display:none;margin-top:20px}
 .giftsGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(max-width:520px){.giftsGrid{grid-template-columns:1fr}}
 .scratchCard{
@@ -103,7 +111,7 @@ button{
 <div class="card">
 
 <img id="capy" class="capy"
-src="https://media.giphy.com/media/9d3LQ6TdV2Flo8ODTU/giphy.gif">
+src="https://media.giphy.com/media/9d3LQ6TdV2Flo8ODTU/giphy.gif" />
 
 <h1>💘 Will you be my Valentine?</h1>
 <p>I have a very important question for you…</p>
@@ -114,6 +122,12 @@ src="https://media.giphy.com/media/9d3LQ6TdV2Flo8ODTU/giphy.gif">
 </div>
 
 <div class="msg" id="msg"></div>
+
+<!-- PHOTO -->
+<div id="photoWrap">
+  <img id="photo" src="us.jpg" alt="us" />
+  <div style="font-size:14px;opacity:.8;margin-top:6px;">us 🫶</div>
+</div>
 
 <!-- DATE PICKER -->
 <div id="datePicker">
@@ -132,24 +146,24 @@ src="https://media.giphy.com/media/9d3LQ6TdV2Flo8ODTU/giphy.gif">
   <p><strong>Scratch to reveal your mystery gifts 🎁</strong></p>
   <div class="giftsGrid">
     <div class="scratchCard">
-      <img class="scratchReveal" src="gift1.jpg">
+      <img class="scratchReveal" src="gift1.jpg" />
       <canvas class="scratchCanvas"></canvas>
       <div class="scratchHint">scratch me ✨</div>
     </div>
     <div class="scratchCard">
-      <img class="scratchReveal" src="gift2.jpg">
+      <img class="scratchReveal" src="gift2.jpg" />
       <canvas class="scratchCanvas"></canvas>
       <div class="scratchHint">scratch me ✨</div>
     </div>
     <div class="scratchCard">
-      <img class="scratchReveal" src="gift3.jpg">
+      <img class="scratchReveal" src="gift3.jpg" />
       <canvas class="scratchCanvas"></canvas>
       <div class="scratchHint">scratch me ✨</div>
     </div>
   </div>
 </div>
 
-<!-- 🎶 SONG -->
+<!-- SONG -->
 <audio id="song" src="song.mp3"></audio>
 
 </div>
@@ -159,6 +173,7 @@ const yes=document.getElementById("yes");
 const no=document.getElementById("no");
 const msg=document.getElementById("msg");
 const capy=document.getElementById("capy");
+const photoWrap=document.getElementById("photoWrap");
 const datePicker=document.getElementById("datePicker");
 const dateResult=document.getElementById("dateResult");
 const giftsWrap=document.getElementById("giftsWrap");
@@ -177,6 +192,7 @@ no.onclick=()=>{
 yes.onclick=()=>{
   msg.textContent="YAYYY 💕";
   capy.src="https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif";
+  photoWrap.style.display="block";
   datePicker.style.display="block";
   confetti();
 };
@@ -185,13 +201,10 @@ document.querySelectorAll(".dateBtn").forEach(btn=>{
   btn.onclick=()=>{
     dateResult.textContent=`${btn.dataset.choice} it is 💘`;
     btn.classList.add("effect-pop");
-
     giftsWrap.style.display="block";
     initScratch();
     confetti();
-
-    // 🎶 play song after date is picked
-    song.play();
+    song.play(); // 🎶 play song here
   };
 });
 
@@ -215,7 +228,8 @@ function initScratch(){
     const ctx=c.getContext("2d");
     const r=c.getBoundingClientRect();
     c.width=r.width; c.height=r.height;
-    ctx.fillStyle="#ccc"; ctx.fillRect(0,0,r.width,r.height);
+    ctx.fillStyle="#ccc";
+    ctx.fillRect(0,0,r.width,r.height);
     ctx.globalCompositeOperation="destination-out";
     let down=false;
     c.onpointerdown=()=>down=true;
