@@ -1,244 +1,220 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Will you be my Valentine?</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Will you be my Valentine?</title>
 
-  <style>
-    body{
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:#ffe6ee;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin:0;
-      padding:18px;
-    }
-    .card{
-      background:#fff;
-      width:min(640px,100%);
-      border-radius:22px;
-      box-shadow:0 15px 40px rgba(0,0,0,.15);
-      padding:28px 22px;
-      text-align:center;
-    }
-    h1{font-size:38px; margin:10px 0 10px; line-height:1.1;}
-    p{font-size:18px; margin:0 0 14px; opacity:.9;}
-    .capy{
-      width:160px;
-      margin:0 auto 10px;
-      display:block;
-      pointer-events:none; /* prevents iOS tap weirdness */
-      user-select:none;
-      -webkit-user-select:none;
-    }
-    .buttons{
-      display:flex;
-      justify-content:center;
-      gap:14px;
-      margin-top:10px;
-    }
-    button{
-      font-size:20px;
-      padding:12px 22px;
-      border-radius:14px;
-      border:none;
-      cursor:pointer;
-      transition:transform .2s ease, opacity .2s ease;
-      touch-action:manipulation;
-      position:relative;
-      z-index:5;
-    }
-    #yes{background:#ff2d55; color:#fff;}
-    #no{background:#e9e9ef;}
-    .msg{
-      margin-top:14px;
-      font-size:16px;
-      opacity:.85;
-      min-height:22px;
-    }
-/* effects */
-@keyframes pop {
-  0% { transform: scale(1); }
-  60% { transform: scale(1.12); }
-  100% { transform: scale(1.06); }
+<style>
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#ffe6ee;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0;
+  padding:18px;
 }
-@keyframes glow {
-  0% { box-shadow: 0 0 0 rgba(255,45,85,0); }
-  100% { box-shadow: 0 0 24px rgba(255,45,85,.35); }
+.card{
+  background:#fff;
+  width:min(680px,100%);
+  border-radius:22px;
+  box-shadow:0 15px 40px rgba(0,0,0,.15);
+  padding:28px 22px;
+  text-align:center;
 }
-.effect-pop { animation: pop .35s ease; }
-.effect-glow { animation: glow .35s ease; }
+h1{font-size:38px;margin:10px 0}
+p{font-size:18px;margin:0 0 14px;opacity:.9}
+.capy{
+  width:160px;
+  margin:0 auto 10px;
+  display:block;
+  pointer-events:none;
+}
+.buttons{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  margin-top:10px;
+}
+button{
+  font-size:20px;
+  padding:12px 22px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  transition:transform .2s ease;
+}
+#yes{background:#ff2d55;color:#fff}
+#no{background:#e9e9ef}
+.msg{margin-top:14px;font-size:16px;min-height:22px}
 
-.toast {
-  display:none;
-  margin: 12px auto 0;
-  width: fit-content;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: rgba(255,45,85,0.08);
-  border: 1px solid rgba(255,45,85,0.18);
-  font-size: 14px;
-  font-weight: 700;
+/* date picker */
+#datePicker{display:none;margin-top:16px}
+.dateBtns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.dateBtn{
+  background:#fff0f5;
+  border:1px solid rgba(0,0,0,.08);
 }
-    /* Photo reveal */
-    #photoWrap{display:none; margin-top:18px;}
-    #photo{
-      max-width:100%;
-      border-radius:18px;
-      box-shadow:0 10px 25px rgba(0,0,0,.25);
-      display:block;
-      margin:0 auto;
-    }
-    #photoCaption{margin-top:10px; font-size:14px; opacity:.8;}
+.effect-pop{animation:pop .35s ease}
+.effect-glow{box-shadow:0 0 24px rgba(255,45,85,.35)}
+@keyframes pop{
+  0%{transform:scale(1)}
+  60%{transform:scale(1.12)}
+  100%{transform:scale(1.06)}
+}
 
-    /* Date picker */
-    #datePicker{display:none; margin-top:16px;}
-    .dateTitle{font-weight:800; text-align:center; margin:8px 0 12px;}
-    .dateBtns{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:center;
-    }
-    .dateBtn{
-      background:#fff0f5;
-      border:1px solid rgba(0,0,0,.08);
-      color:#111;
-    }
-    .dateBtn:hover{transform:scale(1.04);}
-    .dateBtn:disabled{cursor:default;}
-    #dateResult{margin-top:12px; text-align:center; font-size:16px; opacity:.92; min-height:22px;}
-  </style>
+/* scratch cards */
+#giftsWrap{display:none;margin-top:18px}
+.giftsGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:520px){.giftsGrid{grid-template-columns:1fr}}
+.scratchCard{
+  position:relative;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 10px 22px rgba(0,0,0,.12);
+}
+.scratchReveal{
+  width:100%;
+  height:170px;
+  object-fit:cover;
+  display:block;
+  pointer-events:none;
+}
+.scratchCanvas{
+  position:absolute;
+  inset:0;
+  touch-action:none;
+}
+.scratchHint{
+  position:absolute;
+  bottom:10px;
+  left:10px;
+  right:10px;
+  background:rgba(255,255,255,.75);
+  padding:6px;
+  border-radius:999px;
+  font-size:12px;
+}
+</style>
 </head>
 
 <body>
-  <div class="card">
-    <img
-      id="capybara"
-      class="capy"
-      src="https://media.giphy.com/media/9d3LQ6TdV2Flo8ODTU/giphy.gif"
-      alt="capybara sticker"
-    />
+<div class="card">
 
-    <h1>💘 Will you be my Valentine?</h1>
-    <p>I have a very important question for you…</p>
+<img id="capy" class="capy"
+src="https://media.giphy.com/media/9d3LQ6TdV2Flo8ODTU/giphy.gif">
 
-    <div class="buttons">
-      <button id="yes" type="button">Yes ❤️</button>
-      <button id="no" type="button">No 😕</button>
+<h1>💘 Will you be my Valentine?</h1>
+<p>I have a very important question for you…</p>
+
+<div class="buttons">
+  <button id="yes">Yes ❤️</button>
+  <button id="no">No 😕</button>
+</div>
+
+<div class="msg" id="msg"></div>
+
+<!-- DATE PICKER -->
+<div id="datePicker">
+  <p><strong>Choose our Valentine plan 👀</strong></p>
+  <div class="dateBtns">
+    <button class="dateBtn" data-choice="🍝 Dinner">🍝 Dinner</button>
+    <button class="dateBtn" data-choice="🎬 Movie">🎬 Movie</button>
+    <button class="dateBtn" data-choice="🧺 Picnic">🧺 Picnic</button>
+    <button class="dateBtn" data-choice="🎁 Surprise">🎁 Surprise</button>
+  </div>
+  <div class="msg" id="dateResult"></div>
+</div>
+
+<!-- SCRATCH GIFTS -->
+<div id="giftsWrap">
+  <p><strong>Scratch to reveal your mystery gifts 🎁</strong></p>
+  <div class="giftsGrid">
+    <div class="scratchCard">
+      <img class="scratchReveal" src="gift1.jpg">
+      <canvas class="scratchCanvas"></canvas>
+      <div class="scratchHint">scratch me ✨</div>
     </div>
-
-    <div class="msg" id="message"></div>
-
-    <!-- Photo reveal (optional: upload us.jpg to your repo root) -->
-    <div id="photoWrap">
-      <img id="photo" src="us.JPG" alt="our photo" />
-      <div id="photoCaption">us 🫶</div>
+    <div class="scratchCard">
+      <img class="scratchReveal" src="gift2.jpg">
+      <canvas class="scratchCanvas"></canvas>
+      <div class="scratchHint">scratch me ✨</div>
     </div>
-
-    <!-- Date picker (shows after YES) -->
-    <div id="datePicker">
-      <div class="dateTitle">Choose our Valentine plan 👀</div>
-      <div class="dateBtns">
-        <button type="button" class="dateBtn" data-choice="🍝 Dinner">🍝 Dinner</button>
-        <button type="button" class="dateBtn" data-choice="🎬 Movie night">🎬 Movie night</button>
-        <button type="button" class="dateBtn" data-choice="🧺 Picnic">🧺 Picnic</button>
-        <button type="button" class="dateBtn" data-choice="🎁 Surprise">🎁 Surprise</button>
-      </div>
-      <div id="dateResult"></div>
+    <div class="scratchCard">
+      <img class="scratchReveal" src="gift3.jpg">
+      <canvas class="scratchCanvas"></canvas>
+      <div class="scratchHint">scratch me ✨</div>
     </div>
   </div>
+</div>
 
-  <script>
-    const yesBtn = document.getElementById("yes");
-    const noBtn  = document.getElementById("no");
-    const msg    = document.getElementById("message");
-    const capy   = document.getElementById("capybara");
+</div>
 
-    const photoWrap = document.getElementById("photoWrap");
-    const photo = document.getElementById("photo");
+<script>
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const msg=document.getElementById("msg");
+const capy=document.getElementById("capy");
+const datePicker=document.getElementById("datePicker");
+const dateResult=document.getElementById("dateResult");
+const giftsWrap=document.getElementById("giftsWrap");
 
-    const datePicker = document.getElementById("datePicker");
-    const dateResult = document.getElementById("dateResult");
+const noLines=["Are you sure? 😳","Think again 🥺","Capybara disapproves…","Last chance 💔"];
+let n=0;
 
-    const noLines = [
-      "Are you sure? 😳",
-      "Think again 🥺",
-      "The capybara is nervous…",
-      "This feels wrong 😭",
-      "Ok last chance 💔"
-    ];
-    let i = 0;
+no.onclick=()=>{msg.textContent=noLines[n++%noLines.length];yes.style.transform=`scale(${1+n*.1})`};
 
-    function confetti(){
-      for (let j = 0; j < 30; j++) {
-        const e = document.createElement("div");
-        e.textContent = ["💖","🎉","💘","✨"][j % 4];
-        e.style.position = "fixed";
-        e.style.left = Math.random() * 100 + "vw";
-        e.style.top = "-20px";
-        e.style.fontSize = (18 + Math.random() * 18) + "px";
-        e.style.transition = "transform 2s linear, opacity 2s";
-        e.style.zIndex = 9999;
-        document.body.appendChild(e);
+yes.onclick=()=>{
+  msg.textContent="YAYYY 💕";
+  capy.src="https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif";
+  datePicker.style.display="block";
+  confetti();
+};
 
-        requestAnimationFrame(() => {
-          e.style.transform = "translateY(110vh) rotate(720deg)";
-          e.style.opacity = "0";
-        });
+document.querySelectorAll(".dateBtn").forEach(btn=>{
+  btn.onclick=()=>{
+    dateResult.textContent=`${btn.dataset.choice} it is 💘`;
+    btn.classList.add("effect-pop","effect-glow");
+    giftsWrap.style.display="block";
+    initScratch();
+    confetti();
+  };
+});
 
-        setTimeout(() => e.remove(), 2000);
-      }
-    }
+function confetti(){
+  for(let i=0;i<20;i++){
+    const e=document.createElement("div");
+    e.textContent=["💖","✨","🎉"][i%3];
+    e.style.position="fixed";
+    e.style.left=Math.random()*100+"vw";
+    e.style.top="-20px";
+    e.style.fontSize="18px";
+    e.style.transition="transform 1.5s linear,opacity 1.5s";
+    document.body.appendChild(e);
+    requestAnimationFrame(()=>{e.style.transform="translateY(110vh)";e.style.opacity=0});
+    setTimeout(()=>e.remove(),1500);
+  }
+}
 
-    function setupDatePicker(){
-      const buttons = document.querySelectorAll(".dateBtn");
-      buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const choice = btn.dataset.choice;
-
-          const confirmations = {
-            "🍝 Dinner": "🍝 Dinner it is. Dress cute. I’m handling it 😌💐",
-            "🎬 Movie night": "🎬 Movie night locked in. Blankets + snacks required 🥹",
-            "🧺 Picnic": "🧺 Picnic date!!! I’ll pack the good stuff + a surprise 🫶",
-            "🎁 Surprise": "🎁 Surprise chosen… ok you’re brave 😈💘"
-          };
-
-          dateResult.textContent = confirmations[choice] || `Perfect. ${choice} it is 💘`;
-
-          // lock in the choice
-          buttons.forEach(b => { b.disabled = true; b.style.opacity = 0.75; });
-          btn.style.opacity = 1;
-          btn.style.transform = "scale(1.06)";
-        });
-      });
-    }
-
-    noBtn.addEventListener("click", () => {
-      msg.textContent = noLines[i % noLines.length];
-      i++;
-      yesBtn.style.transform = `scale(${1 + i * 0.12})`;
-    });
-
-    yesBtn.addEventListener("click", () => {
-      msg.textContent = "YAYYY 💕 BEST DECISION EVER 🥹";
-
-      // celebration capybara
-      capy.src = "https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif";
-
-      // show photo if it exists
-      photoWrap.style.display = "block";
-      photo.onerror = () => { photoWrap.style.display = "none"; };
-
-      // show date picker
-      datePicker.style.display = "block";
-      setupDatePicker();
-
-      confetti();
-    });
-  </script>
+function initScratch(){
+  document.querySelectorAll(".scratchCanvas").forEach(c=>{
+    const ctx=c.getContext("2d");
+    const r=c.getBoundingClientRect();
+    c.width=r.width; c.height=r.height;
+    ctx.fillStyle="#ccc"; ctx.fillRect(0,0,r.width,r.height);
+    ctx.globalCompositeOperation="destination-out";
+    let down=false;
+    c.onpointerdown=()=>down=true;
+    c.onpointerup=()=>down=false;
+    c.onpointermove=e=>{
+      if(!down) return;
+      const x=e.offsetX,y=e.offsetY;
+      ctx.beginPath();ctx.arc(x,y,18,0,Math.PI*2);ctx.fill();
+    };
+  });
+}
+</script>
 </body>
 </html>
